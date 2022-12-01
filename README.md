@@ -10,9 +10,9 @@ Online SQL instance used to test queries: https://www.db-fiddle.com/f/2rM8RAnq7h
 3. [Case Study Questions + Answers](#questions)
 4. [Bonus Questions + Answers](#bonus)
 
-## Dataset Structure:
-
 <div id='data'/>
+
+## Dataset Structure:
 
 Note: The original data was built around PostgreSQL, but was swapped to fit MySQL syntax.
 
@@ -78,7 +78,7 @@ Note: The original data was built around PostgreSQL, but was swapped to fit MySQ
 Original image source: 
 https://dbdiagram.io/d/608d07e4b29a09603d12edbd/?utm_source=dbdiagram_embed&utm_medium=bottom_open
 
-![image](ERD-CS1.jpg)
+![image](https://github.com/TheCaptainFalcon/8wksql-cs1/blob/master/ERD-CS1.JPG)
 
 <div id='questions'/>
 
@@ -88,13 +88,13 @@ https://dbdiagram.io/d/608d07e4b29a09603d12edbd/?utm_source=dbdiagram_embed&utm_
 
 **Query #1**
 
-    select
-    	s.customer_id,
-        sum(m.price) as amount_spent
-    from sales s
-    left join menu m on s.product_id = m.product_id
-    group by s.customer_id
-    order by s.customer_id;
+    SELECT
+        s.customer_id,
+        SUM(m.price) AS amount_spent
+    FROM sales s
+    LEFT JOIN menu m ON s.product_id = m.product_id
+    GROUP BY s.customer_id
+    ORDER BY s.customer_id;
 
 | customer_id | amount_spent |
 | ----------- | ------------ |
@@ -108,11 +108,11 @@ https://dbdiagram.io/d/608d07e4b29a09603d12edbd/?utm_source=dbdiagram_embed&utm_
 
 **Query #2**
 
-    select 
-    	customer_id,
-        count(order_date) as visit_count
-    from sales
-    group by customer_id;
+    SELECT 
+        customer_id,
+        COUNT(order_date) AS visit_count
+    FROM sales
+    GROUP BY customer_id;
 
 | customer_id | visit_count |
 | ----------- | ----------- |
@@ -126,12 +126,12 @@ https://dbdiagram.io/d/608d07e4b29a09603d12edbd/?utm_source=dbdiagram_embed&utm_
 
 **Query #3**
 
-    select
-    	customer_id,
-        min(order_date),
+    SELECT
+        customer_id,
+        MIN(order_date),
         product_id
-    from sales
-    group by customer_id, product_id;
+    FROM sales
+    GROUP BY customer_id, product_id;
 
 | customer_id | product_id | min(order_date) |
 | ----------- | ---------- | --------------- |
@@ -144,9 +144,11 @@ https://dbdiagram.io/d/608d07e4b29a09603d12edbd/?utm_source=dbdiagram_embed&utm_
 | C           | 3          | 2021-01-01      |
 
 #### Answer: 
-Customer A ordered product_id 1
-Customer B ordered product_id 2
-Customer C ordered product_id 3
+ Customer A ordered product_id 1
+>
+ Customer B ordered product_id 2
+>
+ Customer C ordered product_id 3
 
 ---
 
@@ -154,13 +156,13 @@ Customer C ordered product_id 3
 
 **Query #4**
 
-    select 
+    SELECT 
         m.product_name, 
-        count(s.product_id) as order_count
-    from sales s
-    left join menu m on m.product_id = s.product_id 
-    group by product_name
-    order by order_count desc;
+        COUNT(s.product_id) AS order_count
+    FROM sales s
+    LEFT JOIN menu m ON m.product_id = s.product_id 
+    GROUP BY product_name
+    ORDER BY order_count DESC;
 
 | product_name | order_count |
 | ------------ | ----------- |
@@ -177,14 +179,14 @@ Most purchased item is ramen and it was purchased 8 times total by all customers
 
 **Query #5**
 
-    select 
+    SELECT
         s.customer_id, 
-        m.product_name, 
-        count(s.product_id) as order_count
-    from sales s
-        left join menu m on s.product_id = m.product_id
-        group by s.customer_id, m.product_name
-        order by s.customer_id, order_count desc;
+        m.product_name,
+        COUNT(s.product_id) AS order_count
+    FROM sales s
+    LEFT JOIN menu m ON s.product_id = m.product_id
+    GROUP BY s.customer_id, m.product_name
+    ORDER BY s.customer_id, order_count DESC;
 
 | customer_id | product_name | order_count |
 | ----------- | ------------ | ----------- |
@@ -199,7 +201,9 @@ Most purchased item is ramen and it was purchased 8 times total by all customers
 #### Answer: 
 
 Customer A - Ramen, 
+>
 Customer B - Curry, 
+>
 Customer C - Ramen
 
 ---
@@ -210,16 +214,16 @@ Customer C - Ramen
 
 Solution 1:
 
-    select
-    	s.customer_id,
+    SELECT
+        s.customer_id,
         s.order_date,
         mm.product_name,
         m.join_date
-    from sales s 
-    left join members m on s.customer_id = m.customer_id
-    inner join menu mm on s.product_id = mm.product_id 
-    where order_date >= join_date
-    order by s.customer_id, s.order_date;
+    FROM sales s 
+    LEFT JOIN members m ON s.customer_id = m.customer_id
+    INNER JOIN menu mm ON s.product_id = mm.product_id 
+    WHERE order_date >= join_date
+    ORDER BY s.customer_id, s.order_date;
 
 | customer_id | order_date | product_name | join_date  |
 | ----------- | ---------- | ------------ | ---------- |
@@ -234,6 +238,7 @@ Solution 1:
 #### Answer: 
 
 Customer A - Curry
+>
 Customer B - Sushi
 
 ---
@@ -242,16 +247,16 @@ Customer B - Sushi
 
 **Query #7**
 
-    select
-    	s.customer_id,
+    SELECT
+        s.customer_id,
         s.order_date,
         mm.product_name,
         m.join_date
-    from sales s 
-    left join members m on s.customer_id = m.customer_id
-    inner join menu mm on s.product_id = mm.product_id
-    where order_date < join_date
-    order by s.customer_id, s.order_date desc;
+    FROM sales s 
+    LEFT JOIN members m ON s.customer_id = m.customer_id
+    INNER JOIN menu mm ON s.product_id = mm.product_id
+    WHERE order_date < join_date
+    ORDER BY s.customer_id, s.order_date DESC;
 
 | customer_id | order_date | product_name | join_date  |
 | ----------- | ---------- | ------------ | ---------- |
@@ -264,6 +269,7 @@ Customer B - Sushi
 #### Answer: 
 
 Customer A - Sushi
+>
 Customer B - Sushi
 
 ---
@@ -272,16 +278,16 @@ Customer B - Sushi
 
 **Query #8**
 
-    select
-    	s.customer_id,
-        count(s.product_id) as products_purchased,
-        sum(mm.price) as total_price
-    from sales s 
-    left join members m on s.customer_id = m.customer_id
-    inner join menu mm on s.product_id = mm.product_id
-    where s.order_date < m.join_date
-    group by s.customer_id
-    order by customer_id;
+    SELECT
+        s.customer_id,
+        COUNT(s.product_id) AS products_purchased,
+        SUM(mm.price) AS total_price
+    FROM sales s 
+    LEFT JOIN members m ON s.customer_id = m.customer_id
+    INNER JOIN menu mm ON s.product_id = mm.product_id
+    WHERE s.order_date < m.join_date
+    GROUP BY s.customer_id
+    ORDER BY customer_id;
 
 | customer_id | products_purchased | total_price |
 | ----------- | ------------------ | ----------- |
@@ -296,24 +302,24 @@ Note: First applicable use in a CTE (outside of tutorials and exercises).
 
 **Query #9**
 
-    with points_table as 
+    WITH points_table AS
     (
-    select 
-    	customer_id,
+    SELECT
+        customer_id,
         product_id,
-        case 
-        	when product_id = 1 then 20
-        	when product_id = 2 then 15
-            when product_id = 3 then 12
-        end as points
-    from sales
+        CASE 
+        	WHEN product_id = 1 THEN 20
+        	WHEN product_id = 2 THEN 15
+            WHEN product_id = 3 THEN 12
+        END AS points
+    FROM sales
     )
     
-    select 
-    	customer_id,
-        sum(points) as total_points
-    from points_table
-    group by customer_id;
+    SELECT
+        customer_id,
+        SUM(points) AS total_points
+    FROM points_table
+    GROUP BY customer_id;
 
 | customer_id | total_points |
 | ----------- | ------------ |
@@ -324,7 +330,9 @@ Note: First applicable use in a CTE (outside of tutorials and exercises).
 For reference (per occurrence):
 
 Sushi = 10(2) points
+>
 Curry = 15 points
+>
 Ramen = 12 points
 
 ---
@@ -333,26 +341,26 @@ Ramen = 12 points
 
 **Query #10**
 
-    with points_table as
+    WITH points_table AS
     (
-    select
-    	s.customer_id,
+    SELECT
+        s.customer_id,
         s.product_id,
-        case
-        	when s.product_id = 1 then 20
-            when s.product_id = 2 then 30
-            when s.product_id = 3 then 24
-        end as points
-    from sales s 
-    left join members m on s.customer_id = m.customer_id
-    where s.order_date >= m.join_date and s.order_date <= (m.join_date + 7)
+        CASE
+        	WHEN s.product_id = 1 THEN 20
+            WHEN s.product_id = 2 THEN 30
+            WHEN s.product_id = 3 THEN 24
+        END AS points
+    FROM sales s 
+    LEFT JOIN members m ON s.customer_id = m.customer_id
+    WHERE s.order_date >= m.join_date AND s.order_date <= (m.join_date + 7)
     )
     
-    select 
-    	customer_id,
-        sum(points) as total_points
-    from points_table
-    group by s.customer_id;
+    SELECT
+        customer_id,
+        SUM(points) AS total_points
+    FROM points_table
+    GROUP BY s.customer_id;
 
 | customer_id | total_points |
 | ----------- | ------------ |
@@ -362,7 +370,9 @@ Ramen = 12 points
 For reference (per occurrence):
 
 Sushi = 10(2) points
+>
 Curry = 15(2) points
+>
 Ramen = 12(2) points
 
 ---
@@ -375,20 +385,20 @@ Ramen = 12(2) points
 
 **Query #1**
 
-    select 
-    	s.customer_id,
+    SELECT
+        s.customer_id,
         s.order_date, 
         mm.product_name,
         mm.price,
-        case
-        	when s.order_date < m.join_date then 'N'
-            when m.join_date is null then 'N'
-            else 'Y'
-        end as member
-    from sales s
-    left join menu mm on s.product_id = mm.product_id
-    left join members m on s.customer_id = m.customer_id
-    order by s.customer_id
+        CASE
+        	WHEN s.order_date < m.join_date THEN 'N'
+            WHEN m.join_date IS NULL THEN 'N'
+            ELSE 'Y'
+        END AS member
+    FROM sales s
+    LEFT JOIN menu mm ON s.product_id = mm.product_id
+    LEFT JOIN members m ON s.customer_id = m.customer_id
+    ORDER BY s.customer_id;
 
 | customer_id | order_date | product_name | price | member |
 | ----------- | ---------- | ------------ | ----- | ------ |
@@ -419,34 +429,35 @@ Important: Needed to use dense_rank and to include member (plus the customer_id)
 
 **Query #2**
 
-    with joined_table as 
+    WITH joined_table AS 
     (
-    select 
-    	s.customer_id,
+    SELECT
+        s.customer_id,
         s.order_date, 
         mm.product_name,
         mm.price,
-        case
-        	when s.order_date < m.join_date then 'N'
-            when m.join_date is null then 'N'
-            else 'Y'
-        end as member
-    from sales s
-    left join menu mm on s.product_id = mm.product_id
-    left join members m on s.customer_id = m.customer_id
-    order by s.customer_id
+        CASE
+        	WHEN s.order_date < m.join_date THEN 'N'
+            WHEN m.join_date IS NULL THEN 'N'
+            ELSE 'Y'
+        END AS member
+    FROM sales s
+    LEFT JOIN menu mm ON s.product_id = mm.product_id
+    LEFT JOIN members m ON s.customer_id = m.customer_id
+    ORDER BY s.customer_id
     )
-    select 
-    	customer_id,
+    
+    SELECT
+        customer_id,
         order_date,
         product_name,
         price,
         member, 
-        case
-        	when member = 'N' then 'null'
-            when member = 'Y' then dense_rank() over (partition by customer_id, member order by order_date) 
-        end as ranking
-    from joined_table
+        CASE
+        	WHEN member = 'N' THEN 'null'
+            WHEN member = 'Y' THEN DENSE_RANK() OVER (PARTITION BY customer_id, member ORDER BY order_date) 
+        END AS ranking
+    FROM joined_table;
 
 | customer_id | order_date | product_name | price | member | ranking |
 | ----------- | ---------- | ------------ | ----- | ------ | ------- |
